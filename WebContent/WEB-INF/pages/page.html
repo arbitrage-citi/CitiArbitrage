@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-resource/1.4.8/angular-resource.js"></script>
+<script type="text/javascript">
+var app=angular.module('myapp',['ngResource']);
+app.config(['$httpProvider', function ($httpProvider) {    
+	$httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
+}]);
+app.controller('MainCtrl',function($scope,$http,$log){
+	  alert("Inside controller");
+     $scope.checkLogin=function(){
+    	 $scope.message='';
+	  alert("inside check loginmethod");
+	  $log.info("username:"+$scope.username);
+	  $log.info("password:"+$scope.password);
+	  $http({
+			method : "post",
+			url : "http://localhost:8086/SpringMVCloginExample-js/login",
+			params: {
+		    	username: $scope.username,
+		    	password:$scope.password
+		    }
+		})
+	   .success(function(response, status, headers, config) {
+	       $scope.message= response.data;
+		   
+	  })
+	 .error(function(response, status, headers, config) {
+		 alert( "failure message: ");
+	});
+	$scope.username='';
+	$scope.password='';
+	
+	
+	
+};
+});
+</script>
+<meta charset="UTF-8">
+<title>Login Page</title>
+</head>
+<body>
+	<div data-ng-app="myapp" data-ng-controller="MainCtrl">
+		<form >
+			<h1>Simple Login Page</h1>
+			User name<input type="text" id="username" name="username" data-ng-model="username" /> 
+			Password<input type="password" id="password" name="password" data-ng-model="password" />
+			<input type="submit" data-ng-click="checkLogin()"  value="login"/>
+			<p>{{message}}</p>
+		</form>
+
+	</div>
+
+
+</body>
+</html>
